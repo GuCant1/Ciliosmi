@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cílios da Mi — Studio & Academy | @_ciliosdami</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Cinzel"', 'serif'],
+            serif: ['"Cormorant Garamond"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            studioBg: '#F6F5F2',
+            studioCard: '#EFECE6',
+            studioDark: '#141414',
+            studioGold: '#B89552',
+            studioGoldLight: '#D8BE86',
+            studioBorder: '#E4DFD5',
+          },
+          boxShadow: {
+            bio: '0 14px 36px -10px rgba(20, 20, 20, 0.10)',
+            emblem: '0 12px 30px -6px rgba(20, 20, 20, 0.22)',
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+      background-color: #F6F5F2;
+      color: #141414;
+      -webkit-tap-highlight-color: transparent;
+      scroll-behavior: smooth;
+    }
+
+    .gold-text {
+      background: linear-gradient(135deg, #DFC48C 0%, #B89552 50%, #967436 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .banner-vignette {
+      -webkit-mask-image: radial-gradient(ellipse 78% 76% at 50% 50%, #000 58%, transparent 100%);
+      mask-image: radial-gradient(ellipse 78% 76% at 50% 50%, #000 58%, transparent 100%);
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-modal {
+      animation: fadeSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    input, textarea, select {
+      font-size: 16px;
+    }
+
+    /* Controles do Modo Edição Visual (só aparecem quando isEditMode = true) */
+    .edit-overlay-btn {
+      display: none;
+    }
+    body.edit-mode .edit-overlay-btn {
+      display: inline-flex;
+    }
+    body.edit-mode .editable-ring {
+      outline: 2px dashed rgba(184, 149, 82, 0.75);
+      outline-offset: 2px;
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #F6F5F2; }
+    ::-webkit-scrollbar-thumb { background: #CFC8BC; border-radius: 999px; }
+  </style>
+</head>
+<body class="font-sans antialiased selection:bg-[#B89552]/20 selection:text-[#141414]">
+
+  <!-- ==================== BARRA FLUTUANTE DO MODO EDIÇÃO VISUAL ==================== -->
+  <div id="editModeBar" class="hidden sticky top-0 z-[60] w-full bg-[#141414] text-white border-b border-[#B89552] px-3 py-2.5 shadow-xl">
+    <div class="max-w-lg mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-[#D8BE86] animate-pulse"></span>
+        <span class="text-xs font-bold tracking-wide text-[#D8BE86]">Modo Edição Ativo</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <button type="button" onclick="openPasswordModal()"
+          class="px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-[11px] font-semibold text-white transition cursor-pointer">
+          Senha
+        </button>
+        <button type="button" id="btnResetTop" onclick="handleTopResetClick()"
+          class="px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-red-600/80 text-[11px] font-semibold text-neutral-200 transition cursor-pointer">
+          Resetar
+        </button>
+        <button type="button" onclick="saveAndExitEditMode()"
+          class="px-3.5 py-1.5 rounded-lg bg-[#B89552] hover:bg-[#D8BE86] text-[#141414] text-xs font-bold transition cursor-pointer">
+          Salvar &amp; Sair
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input de arquivo oculto compartilhado para troca rápida de qualquer imagem -->
+  <input type="file" id="globalPhotoPicker" accept="image/*" class="hidden" onchange="onGlobalPhotoPicked(this)" />
+
+  <!-- ==================== CABEÇALHO EDITORIAL ==================== -->
+  <header class="relative w-full">
+    <div id="siteBannerWrapper" class="relative w-full h-60 sm:h-72 bg-[#141414] overflow-hidden flex items-center justify-center pt-4 pb-16 sm:pb-20 px-4">
+      <img id="siteBannerBackdrop"
+        src="https://i.postimg.cc/ZYw7Sz4p/905788702-1166737955727084-524449998965015467-n.jpg"
+        alt="" aria-hidden="true"
+        class="absolute inset-0 w-full h-full object-cover object-center scale-125 blur-2xl opacity-35 brightness-50 pointer-events-none select-none" />
+      <div class="absolute inset-0 bg-gradient-to-b from-[#141414]/45 via-transparent to-[#141414]/90 pointer-events-none"></div>
+
+      <img id="siteBannerImg"
+        src="https://i.postimg.cc/ZYw7Sz4p/905788702-1166737955727084-524449998965015467-n.jpg"
+        alt="Banner Cílios da Mi"
+        class="relative z-10 max-h-[155px] sm:max-h-[190px] max-w-[85%] w-auto h-auto object-contain object-center banner-vignette select-none" />
+
+      <!-- Botões de Edição Direta no Banner -->
+      <div class="edit-overlay-btn absolute top-3 right-3 z-30 items-center gap-1.5">
+        <button type="button" onclick="toggleBannerFit()"
+          class="px-2.5 py-1.5 rounded-full bg-[#141414]/90 border border-[#B89552] text-[11px] font-bold text-white shadow-lg cursor-pointer">
+          Ajustar Banner
+        </button>
+        <button type="button" onclick="triggerImageChange('banner')"
+          class="px-3 py-1.5 rounded-full bg-[#B89552] text-[#141414] text-[11px] font-bold shadow-lg cursor-pointer">
+          Trocar Banner
+        </button>
+      </div>
+
+      <div class="absolute inset-x-0 bottom-0 h-[1px] bg-gradient-to-r from-transparent via-[#B89552]/60 to-transparent"></div>
+    </div>
+
+    <!-- Emblema Circular Centralizado (Monograma Preto) -->
+    <div class="relative z-20 -mt-12 sm:-mt-14 flex flex-col items-center px-4">
+      <div class="relative">
+        <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-[#141414] border-[4px] border-[#F6F5F2] shadow-emblem overflow-hidden flex items-center justify-center select-none">
+          <img id="siteLogoImg"
+            src="https://i.postimg.cc/BQthZ7n8/907887408-1452803366962488-9194404289877991233-n.jpg"
+            alt="Monograma Cílios da Mi"
+            class="w-full h-full object-cover object-center scale-[1.03]" />
+        </div>
+        <button type="button" onclick="triggerImageChange('logo')"
+          class="edit-overlay-btn absolute -bottom-1 -right-2 z-30 px-2.5 py-1 rounded-full bg-[#B89552] text-[#141414] border-2 border-[#141414] text-[10px] font-bold shadow-lg cursor-pointer">
+          Logo
+        </button>
+      </div>
+
+      <!-- Bio & Credenciais -->
+      <div class="mt-3.5 text-center max-w-md w-full relative">
+        <div class="inline-flex items-center justify-center gap-1.5">
+          <a href="https://www.instagram.com/_ciliosdami" target="_blank" rel="noopener noreferrer"
+            class="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wider text-[#141414] hover:text-[#B89552] transition">
+            <span id="txtBioHandle">@_ciliosdami</span>
+            <svg class="w-3.5 h-3.5 text-[#B89552]" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+          </a>
+          <button type="button" onclick="openTextEditor('bio')"
+            class="edit-overlay-btn px-2.5 py-0.5 rounded-full bg-[#141414] text-[#D8BE86] text-[10px] font-bold cursor-pointer">
+            Editar Bio
+          </button>
+        </div>
+
+        <p id="txtBioSubtitle" class="mt-1 text-xs sm:text-sm text-neutral-600 font-normal">
+          Cílios | Sobrancelhas | Unhas • Seu espaço de beleza preferido
+        </p>
+
+        <div class="mt-2.5 flex flex-wrap items-center justify-center gap-2 text-[11px] font-medium text-neutral-700">
+          <span id="txtBadge1" class="px-2.5 py-1 rounded-full bg-white border border-[#E4DFD5] shadow-sm">
+            ✨ +2.000 atendimentos
+          </span>
+          <span id="txtBadge2" class="px-2.5 py-1 rounded-full bg-white border border-[#E4DFD5] shadow-sm">
+            🎓 18 alunas formadas
+          </span>
+        </div>
+
+        <!-- Ícones Rápidos Sociais -->
+        <div class="mt-4 flex items-center justify-center gap-3">
+          <a href="https://www.instagram.com/_ciliosdami" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+            class="w-10 h-10 rounded-full bg-white border border-[#E4DFD5] text-[#141414] flex items-center justify-center hover:bg-[#141414] hover:text-[#D8BE86] hover:border-[#141414] transition shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+          <a href="https://wa.me/5511968342103?text=Ol%C3%A1%20Mi!%20%E2%9C%A8%20Vim%20pelo%20link%20da%20bio%20(*%40_ciliosdami*)!" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"
+            class="w-10 h-10 rounded-full bg-white border border-[#E4DFD5] text-[#141414] flex items-center justify-center hover:bg-[#141414] hover:text-[#D8BE86] hover:border-[#141414] transition shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
+            </svg>
+          </a>
+          <button type="button" onclick="openBioSection('localizacao')" aria-label="Como Chegar"
+            class="w-10 h-10 rounded-full bg-white border border-[#E4DFD5] text-[#141414] flex items-center justify-center hover:bg-[#141414] hover:text-[#D8BE86] hover:border-[#141414] transition shadow-sm cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </button>
+          <a href="https://share.google/NTL7zsGlCvroQRAbK" target="_blank" rel="noopener noreferrer" aria-label="Avaliações Google"
+            class="w-10 h-10 rounded-full bg-white border border-[#E4DFD5] text-[#141414] flex items-center justify-center hover:bg-[#141414] hover:text-[#D8BE86] hover:border-[#141414] transition shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== PILHA PRINCIPAL DE CARDS ==================== -->
+  <main class="max-w-lg mx-auto px-4 pt-7 pb-16 space-y-5">
+
+    <!-- CARD 1: AGENDAR HORÁRIO -->
+    <div class="relative editable-ring rounded-[1.75rem]">
+      <div class="edit-overlay-btn absolute top-3 right-3 z-30 items-center gap-1.5">
+        <button type="button" onclick="triggerImageChange('cardAgendar')"
+          class="px-3 py-1.5 rounded-full bg-[#B89552] text-[#141414] text-[11px] font-bold shadow-lg cursor-pointer">
+          Trocar Foto
+        </button>
+        <button type="button" onclick="openTextEditor('cardAgendar')"
+          class="px-3 py-1.5 rounded-full bg-[#141414] text-[#D8BE86] border border-[#B89552] text-[11px] font-bold shadow-lg cursor-pointer">
+          Texto
+        </button>
+      </div>
+      <a href="https://wa.me/5511968342103?text=Ol%C3%A1%20Mi!%20%E2%9C%A8%20Vim%20pelo%20link%20da%20bio%20(*%40_ciliosdami*)%20e%20gostaria%20de%20agendar%20um%20hor%C3%A1rio!"
+         target="_blank" rel="noopener noreferrer"
+         class="w-full block text-left rounded-[1.75rem] overflow-hidden shadow-bio bg-white border border-[#E4DFD5] group transition-all duration-300 hover:-translate-y-0.5 hover:border-[#B89552]">
+        <div class="relative h-72 sm:h-80 w-full overflow-hidden bg-[#1C1B1A]">
+          <img id="imgCardAgendar" src="https://i.ibb.co/p6hZPFNC/IMG-20261114-WA0008.jpg" alt="Milena Silveira — Studio Cílios da Mi"
+            class="w-full h-full object-cover object-center transition duration-700 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-[#141414]/90 via-[#141414]/25 to-transparent pointer-events-none"></div>
+          <span id="badgeCardAgendar" class="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#141414]/80 backdrop-blur-md border border-[#B89552]/50 text-[10px] uppercase tracking-[0.22em] text-[#D8BE86] font-semibold">
+            Atendimento Exclusivo
+          </span>
+          <div class="absolute inset-x-0 bottom-5 px-6 text-center">
+            <h2 id="titleCardAgendar" class="font-display text-2xl sm:text-[26px] tracking-[0.24em] text-white uppercase drop-shadow">
+              AGENDAR HORÁRIO
+            </h2>
+          </div>
+        </div>
+        <div class="px-5 py-4 bg-[#EFECE6] flex items-center justify-between gap-3">
+          <div>
+            <p id="sub1CardAgendar" class="text-xs sm:text-[13px] font-semibold text-[#141414]">
+              Garanta seu horário direto pelo WhatsApp
+            </p>
+            <p id="sub2CardAgendar" class="text-[11px] text-neutral-600 mt-0.5">
+              Cílios, Sobrancelhas e Unhas em Guarulhos
+            </p>
+          </div>
+          <span class="w-9 h-9 rounded-full border border-[#141414]/25 bg-white/70 flex items-center justify-center shrink-0 text-[#141414] group-hover:bg-[#141414] group-hover:text-[#D8BE86] transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </span>
+        </div>
+      </a>
+    </div>
+
+    <!-- CARD 2: CATÁLOGO OFICIAL -->
+    <div class="relative editable-ring rounded-[1.75rem]">
+      <div class="edit-overlay-btn absolute top-3 right-3 z-30 items-center gap-1.5">
+        <button type="button" onclick="triggerImageChange('cardCatalogo')"
+          class="px-3 py-1.5 rounded-full bg-[#B89552] text-[#141414] text-[11px] font-bold shadow-lg cursor-pointer">
+          Trocar Foto
+        </button>
+        <button type="button" onclick="openTextEditor('cardCatalogo')"
+          class="px-3 py-1.5 rounded-full bg-[#141414] text-[#D8BE86] border border-[#B89552] text-[11px] font-bold shadow-lg cursor-pointer">
+          Texto
+        </button>
+      </div>
+      <button type="button" onclick="openBioSection('catalogo')"
+        class="w-full block text-left rounded-[1.75rem] overflow-hidden shadow-bio bg-white border border-[#E4DFD5] group transition-all duration-300 hover:-translate-y-0.5 hover:border-[#B89552] cursor-pointer focus:outline-none">
+        <div class="relative h-72 sm:h-80 w-full overflow-hidden bg-[#1C1B1A]">
+          <img id="imgCardCatalogo" src="https://i.ibb.co/WWCyqmjp/IMG-20261114-WA0011.jpg" alt="Catálogo Cílios, Sobrancelhas e Unhas"
+            class="w-full h-full object-cover object-center transition duration-700 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-[#141414]/90 via-[#141414]/25 to-transparent pointer-events-none"></div>
+          <span id="badgeCardCatalogo" class="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#141414]/80 backdrop-blur-md border border-[#B89552]/50 text-[10px] uppercase tracking-[0.22em] text-[#D8BE86] font-semibold">
+            Tabela de Valores
+          </span>
+          <div class="absolute inset-x-0 bottom-5 px-6 text-center">
+            <h2 id="titleCardCatalogo" class="font-display text-2xl sm:text-[26px] tracking-[0.24em] text-white uppercase drop-shadow">
+              CATÁLOGO
+            </h2>
+          </div>
+        </div>
+        <div class="px-5 py-4 bg-[#EFECE6] flex items-center justify-between gap-3">
+          <div>
+            <p id="sub1CardCatalogo" class="text-xs sm:text-[13px] font-semibold text-[#141414]">
+              Confira os valores de Cílios, Sobrancelhas e Unhas
+            </p>
+            <p id="sub2CardCatalogo" class="text-[11px] text-neutral-600 mt-0.5">
+              Aplicação, manutenção, pacotes e técnicas detalhadas
+            </p>
+          </div>
+          <span class="w-9 h-9 rounded-full border border-[#141414]/25 bg-white/70 flex items-center justify-center shrink-0 text-[#141414] group-hover:bg-[#141414] group-hover:text-[#D8BE86] transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </span>
+        </div>
+      </button>
+    </div>
+
+    <!-- CARD 3: ACADEMY -->
+    <div class="relative editable-ring rounded-[1.75rem]">
+      <div class="edit-overlay-btn absolute top-3 right-3 z-30 items-center gap-1.5">
+        <button type="button" onclick="triggerImageChange('cardAcademy')"
+          class="px-3 py-1.5 rounded-full bg-[#B89552] text-[#141414] text-[11px] font-bold shadow-lg cursor-pointer">
+          Trocar Foto
+        </button>
+        <button type="button" onclick="openTextEditor('cardAcademy')"
+          class="px-3 py-1.5 rounded-full bg-[#141414] text-[#D8BE86] border border-[#B89552] text-[11px] font-bold shadow-lg cursor-pointer">
+          Texto
+        </button>
+      </div>
+      <a href="https://wa.me/5511968342103?text=Ol%C3%A1%20Mi!%20%F0%9F%8E%93%20Vim%20pelo%20link%20da%20bio%20(*%40_ciliosdami*)%20e%20quero%20saber%20mais%20sobre%20os%20*Cursos%20da%20Academy*!"
+         target="_blank" rel="noopener noreferrer"
+         class="w-full block text-left rounded-[1.75rem] overflow-hidden shadow-bio bg-white border border-[#E4DFD5] group transition-all duration-300 hover:-translate-y-0.5 hover:border-[#B89552]">
+        <div class="relative h-72 sm:h-80 w-full overflow-hidden bg-[#141414]">
+          <img id="imgCardAcademy" src="https://i.ibb.co/jZL9jcjK/IMG-20261114-WA0010.jpg" alt="Milena Silveira — Academy Cílios da Mi"
+            class="w-full h-full object-cover object-top transition duration-700 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-[#141414]/95 via-[#141414]/25 to-transparent pointer-events-none"></div>
+          <span id="badgeCardAcademy" class="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#141414]/85 backdrop-blur-md border border-[#B89552]/60 text-[10px] uppercase tracking-[0.22em] text-[#D8BE86] font-semibold">
+            Formação Profissional
+          </span>
+          <div class="absolute inset-x-0 bottom-5 px-6 text-center">
+            <h2 id="titleCardAcademy" class="font-display text-2xl sm:text-[26px] tracking-[0.26em] gold-text uppercase drop-shadow font-semibold">
+              ACADEMY
+            </h2>
+          </div>
+        </div>
+        <div class="px-5 py-4 bg-[#141414] text-white flex items-center justify-between gap-3">
+          <div>
+            <p id="sub1CardAcademy" class="text-xs sm:text-[13px] font-semibold text-[#D8BE86]">
+              Cursos de Cílios e Sobrancelhas com Milena Silveira
+            </p>
+            <p id="sub2CardAcademy" class="text-[11px] text-neutral-300 mt-0.5">
+              +18 alunas formadas • Fale no WhatsApp para próximas turmas
+            </p>
+          </div>
+          <span class="w-9 h-9 rounded-full border border-[#B89552]/50 bg-[#B89552]/15 flex items-center justify-center shrink-0 text-[#D8BE86] group-hover:bg-[#B89552] group-hover:text-[#141414] transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </span>
+        </div>
+      </a>
+    </div>
+
+    <!-- CARD 4: AVALIAÇÕES -->
+    <div class="relative editable-ring rounded-[1.75rem]">
+      <div class="edit-overlay-btn absolute top-3 right-3 z-30 items-center gap-1.5">
+        <button type="button" onclick="triggerImageChange('cardAvaliacoes')"
+          class="px-3 py-1.5 rounded-full bg-[#B89552] text-[#141414] text-[11px] font-bold shadow-lg cursor-pointer">
+          Trocar Foto
+        </button>
+        <button type="button" onclick="openTextEditor('cardAvaliacoes')"
+          class="px-3 py-1.5 rounded-full bg-[#141414] text-[#D8BE86] border border-[#B89552] text-[11px] font-bold shadow-lg cursor-pointer">
+          Texto
+        </button>
+      </div>
+      <a href="https://share.google/NTL7zsGlCvroQRAbK"
+         target="_blank" rel="noopener noreferrer"
+         class="w-full block text-left rounded-[1.75rem] overflow-hidden shadow-bio bg-white border border-[#E4DFD5] group transition-all duration-300 hover:-translate-y-0.5 hover:border-[#B89552]">
+        <div class="relative h-72 sm:h-80 w-full overflow-hidden bg-[#1C1B1A]">
+          <img id="imgCardAvaliacoes" src="https://i.ibb.co/pSrMR8R/IMG-20261114-WA0006.jpg" alt="Avaliações Clientes Cílios da Mi"
+            class="w-full h-full object-cover object-top transition duration-700 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-[#141414]/90 via-[#141414]/25 to-transparent pointer-events-none"></div>
+          <span id="badgeCardAvaliacoes" class="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#141414]/80 backdrop-blur-md border border-[#B89552]/50 text-[10px] uppercase tracking-[0.22em] text-[#D8BE86] font-semibold">
+            Google ★★★★★
+          </span>
+          <div class="absolute inset-x-0 bottom-5 px-6 text-center">
+            <h2 id="titleCardAvaliacoes" class="font-display text-2xl sm:text-[26px] tracking-[0.24em] text-white uppercase drop-shadow">
+              AVALIAÇÕES
+            </h2>
+          </div>
+        </div>
+        <div class="px-5 py-4 bg-[#EFECE6] flex items-center justify-between gap-3">
+          <div>
+            <p id="sub1CardAvaliacoes" class="text-xs sm:text-[13px] font-semibold text-[#141414]">
+              Descubra o porquê somos referência em Guarulhos
+            </p>
+            <p id="sub2CardAvaliacoes" class="text-[11px] text-neutral-600 mt-0.5">
+              Veja nossos depoimentos reais ou deixe sua avaliação no Google
+            </p>
+          </div>
+          <span class="w-9 h-9 rounded-full border border-[#141414]/25 bg-white/70 flex items-center justify-center shrink-0 text-[#141414] group-hover:bg-[#141414] group-hover:text-[#D8BE86] transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </span>
+        </div>
+      </a>
+    </div>
+
+    <!-- CARD 5: COMO CHEGAR -->
+    <div class="relative editable-ring rounded-[1.75rem]">
+      <div class="edit-overlay-btn absolute top-3 right-3 z-30 items-center gap-1.5">
+        <button type="button" onclick="triggerImageChange('cardLocalizacao')"
+          class="px-3 py-1.5 rounded-full bg-[#B89552] text-[#141414] text-[11px] font-bold shadow-lg cursor-pointer">
+          Trocar Foto
+        </button>
+        <button type="button" onclick="openTextEditor('cardLocalizacao')"
+          class="px-3 py-1.5 rounded-full bg-[#141414] text-[#D8BE86] border border-[#B89552] text-[11px] font-bold shadow-lg cursor-pointer">
+          Texto
+        </button>
+      </div>
+      <button type="button" onclick="openBioSection('localizacao')"
+        class="w-full block text-left rounded-[1.75rem] overflow-hidden shadow-bio bg-white border border-[#E4DFD5] group transition-all duration-300 hover:-translate-y-0.5 hover:border-[#B89552] cursor-pointer focus:outline-none">
+        <div class="relative h-72 sm:h-80 w-full overflow-hidden bg-[#1C1B1A]">
+          <img id="imgCardLocalizacao" src="https://i.ibb.co/nMvT9MTw/IMG-20261114-WA0009.jpg" alt="Como Chegar — Cílios da Mi Guarulhos"
+            class="w-full h-full object-cover object-top transition duration-700 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-[#141414]/90 via-[#141414]/25 to-transparent pointer-events-none"></div>
+          <span id="badgeCardLocalizacao" class="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#141414]/80 backdrop-blur-md border border-[#B89552]/50 text-[10px] uppercase tracking-[0.22em] text-[#D8BE86] font-semibold">
+            Jardim Ponte Alta • Guarulhos
+          </span>
+          <div class="absolute inset-x-0 bottom-5 px-6 text-center">
+            <h2 id="titleCardLocalizacao" class="font-display text-2xl sm:text-[26px] tracking-[0.24em] text-white uppercase drop-shadow">
+              COMO CHEGAR
+            </h2>
+          </div>
+        </div>
+        <div class="px-5 py-4 bg-[#EFECE6] flex items-center justify-between gap-3">
+          <div>
+            <p id="sub1CardLocalizacao" class="text-xs sm:text-[13px] font-semibold text-[#141414]">
+              Rua Zeferino Alves de Oliveira, 1051
+            </p>
+            <p id="sub2CardLocalizacao" class="text-[11px] text-neutral-600 mt-0.5">
+              Toque para abrir o mapa interativo e horários de atendimento
+            </p>
+          </div>
+          <span class="w-9 h-9 rounded-full border border-[#141414]/25 bg-white/70 flex items-center justify-center shrink-0 text-[#141414] group-hover:bg-[#141414] group-hover:text-[#D8BE86] transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </span>
+        </div>
+      </button>
+    </div>
+
+    <!-- CARD 6: NOSSO STUDIO -->
+    <div class="relative editable-ring rounded-[1.75rem]">
+      <div class="edit-overlay-btn absolute top-3 right-3 z-30 items-center gap-1.5">
+        <button type="button" onclick="triggerImageChange('cardStudio')"
+          class="px-3 py-1.5 rounded-full bg-[#B89552] text-[#141414] text-[11px] font-bold shadow-lg cursor-pointer">
+          Trocar Foto
+        </button>
+        <button type="button" onclick="openTextEditor('cardStudio')"
+          class="px-3 py-1.5 rounded-full bg-[#141414] text-[#D8BE86] border border-[#B89552] text-[11px] font-bold shadow-lg cursor-pointer">
+          Texto
+        </button>
+      </div>
+      <button type="button" onclick="openBioSection('studio')"
+        class="w-full block text-left rounded-[1.75rem] overflow-hidden shadow-bio bg-white border border-[#E4DFD5] group transition-all duration-300 hover:-translate-y-0.5 hover:border-[#B89552] cursor-pointer focus:outline-none">
+        <div class="relative h-72 sm:h-80 w-full overflow-hidden bg-[#1C1B1A]">
+          <img id="imgCardStudio" src="https://i.ibb.co/fV3kRnHT/IMG-20261114-WA0005.jpg" alt="Nosso Studio — Macas e Iluminação"
+            class="w-full h-full object-cover object-center transition duration-700 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gradient-to-t from-[#141414]/90 via-[#141414]/25 to-transparent pointer-events-none"></div>
+          <span id="badgeCardStudio" class="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#141414]/80 backdrop-blur-md border border-[#B89552]/50 text-[10px] uppercase tracking-[0.22em] text-[#D8BE86] font-semibold">
+            Estrutura &amp; Conforto
+          </span>
+          <div class="absolute inset-x-0 bottom-5 px-6 text-center">
+            <h2 id="titleCardStudio" class="font-display text-2xl sm:text-[26px] tracking-[0.24em] text-white uppercase drop-shadow">
+              NOSSO STUDIO
+            </h2>
+          </div>
+        </div>
+        <div class="px-5 py-4 bg-[#EFECE6] flex items-center justify-between gap-3">
+          <div>
+            <p id="sub1CardStudio" class="text-xs sm:text-[13px] font-semibold text-[#141414]">
+              Conheça nosso espaço e veja fotos do estúdio
+            </p>
+          </div>
+          <span class="w-9 h-9 rounded-full border border-[#141414]/25 bg-white/70 flex items-center justify-center shrink-0 text-[#141414] group-hover:bg-[#141414] group-hover:text-[#D8BE86] transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </span>
+        </div>
+      </button>
+    </div>
+
+    <!-- RODAPÉ MINIMALISTA (5 TOQUES NO SELO ABREM A SENHA DA MILENA) -->
+    <footer class="pt-6 text-center space-y-2">
+      <button type="button" id="secretAdminTrigger" onclick="registerSecretTap()"
+        class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#E4DFD5] text-[11px] text-neutral-600 shadow-sm select-none active:scale-95 transition">
+        <span class="w-2 h-2 rounded-full bg-[#B89552]"></span>
+        <span id="txtFooterBrand">CÍLIOS DA MI • Studio &amp; Academy</span>
+      </button>
+      <p id="txtFooterSub" class="text-[11px] text-neutral-400">
+        @_ciliosdami • WhatsApp (11) 96834-2103 • Guarulhos - SP
+      </p>
+    </footer>
+  </main>
+
+  <!-- ==================== MODAL PRINCIPAL (CATÁLOGO / COMO CHEGAR / NOSSO STUDIO) ==================== -->
+  <div id="bioModal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center bg-[#141414]/75 backdrop-blur-sm p-0 sm:p-4"
+    onclick="if(event.target.id==='bioModal') closeBioModal()">
+    <div id="bioModalCard" class="animate-modal w-full max-w-xl max-h-[90vh] bg-[#F6F5F2] rounded-t-[2rem] sm:rounded-[2rem] border border-[#E4DFD5] shadow-2xl overflow-hidden flex flex-col">
+      <div class="px-6 py-4 bg-[#141414] text-white flex items-center justify-between shrink-0">
+        <div>
+          <span id="modalBadge" class="text-[10px] uppercase tracking-[0.26em] text-[#D8BE86] block">Cílios da Mi</span>
+          <h3 id="modalTitle" class="font-display text-lg sm:text-xl tracking-[0.16em] uppercase mt-0.5">Catálogo</h3>
+        </div>
+        <button type="button" onclick="closeBioModal()" aria-label="Fechar"
+          class="w-10 h-10 rounded-full bg-white/10 hover:bg-[#B89552] hover:text-[#141414] text-white flex items-center justify-center transition cursor-pointer">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div id="modalBody" class="p-5 sm:p-6 overflow-y-auto space-y-5 flex-1"></div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL DE EDIÇÃO RÁPIDA DE TEXTO / PREÇO ==================== -->
+  <div id="inlineEditModal" class="fixed inset-0 z-[65] hidden items-center justify-center bg-[#141414]/80 backdrop-blur-sm p-4"
+    onclick="if(event.target.id==='inlineEditModal') closeInlineEditModal()">
+    <div class="animate-modal w-full max-w-md bg-[#F6F5F2] rounded-[1.75rem] border border-[#B89552] shadow-2xl overflow-hidden">
+      <div class="px-6 py-4 bg-[#141414] text-white flex items-center justify-between">
+        <div>
+          <span class="text-[10px] uppercase tracking-[0.25em] text-[#D8BE86] block">Edição Direta</span>
+          <h3 id="inlineEditTitle" class="font-display text-base tracking-[0.14em] uppercase mt-0.5">Editar Conteúdo</h3>
+        </div>
+        <button type="button" onclick="closeInlineEditModal()"
+          class="w-8 h-8 rounded-full bg-white/10 hover:bg-[#B89552] hover:text-[#141414] flex items-center justify-center text-white transition cursor-pointer">
+          ✕
+        </button>
+      </div>
+      <form onsubmit="saveInlineEditForm(event)" id="inlineEditForm" class="p-6 space-y-4">
+        <div id="inlineEditFields" class="space-y-3"></div>
+        <button type="submit"
+          class="w-full py-3 rounded-xl bg-[#141414] hover:bg-[#B89552] text-[#D8BE86] hover:text-[#141414] text-xs font-bold uppercase tracking-[0.2em] transition cursor-pointer">
+          Aplicar Alteração
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL DE SENHA (ENTRADA E TROCA DE SENHA) ==================== -->
+  <div id="secretLoginModal" class="fixed inset-0 z-[68] hidden items-center justify-center bg-[#141414]/80 backdrop-blur-sm p-4"
+    onclick="if(event.target.id==='secretLoginModal') closeSecretLogin()">
+    <div class="animate-modal w-full max-w-sm bg-[#F6F5F2] rounded-[1.75rem] border border-[#B89552]/60 shadow-2xl overflow-hidden">
+      <div class="px-6 py-4 bg-[#141414] text-white flex items-center justify-between">
+        <div>
+          <span class="text-[10px] uppercase tracking-[0.25em] text-[#D8BE86] block">Acesso Restrito</span>
+          <h3 id="secretModalHeading" class="font-display text-base tracking-[0.15em] uppercase mt-0.5">Modo Edição Mi</h3>
+        </div>
+        <button type="button" onclick="closeSecretLogin()"
+          class="w-8 h-8 rounded-full bg-white/10 hover:bg-[#B89552] hover:text-[#141414] flex items-center justify-center text-white transition cursor-pointer">
+          ✕
+        </button>
+      </div>
+      <form onsubmit="submitSecretPassword(event)" class="p-6 space-y-4">
+        <div>
+          <label for="secretPasswordInput" id="secretModalLabel" class="block text-xs font-semibold text-[#141414] mb-1.5">
+            Digite sua senha de acesso
+          </label>
+          <input type="password" id="secretPasswordInput" placeholder="••••••••" autocomplete="current-password"
+            class="w-full px-4 py-3 rounded-xl bg-white border border-[#E4DFD5] focus:border-[#B89552] focus:outline-none text-sm text-[#141414]" />
+          <p id="secretLoginError" class="hidden text-xs text-red-600 font-medium mt-1.5">
+            Senha incorreta. Tente novamente.
+          </p>
+        </div>
+        <button type="submit" id="secretModalSubmitBtn"
+          class="w-full py-3 rounded-xl bg-[#141414] hover:bg-[#B89552] text-[#D8BE86] hover:text-[#141414] text-xs font-bold uppercase tracking-[0.2em] transition cursor-pointer">
+          Ativar Edição na Tela
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST DE FEEDBACK -->
+  <div id="toastNotification" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-[75] hidden items-center gap-2 px-4 py-2.5 rounded-full bg-[#141414] text-[#D8BE86] border border-[#B89552]/50 text-xs font-medium shadow-xl">
+    <span id="toastMessage">Pronto!</span>
+  </div>
+
+  <script>
+    (function () {
+      const STORAGE_KEY = 'cilios_da_mi_bio_custom_v2';
+      const ADMIN_PASS_KEY = 'cilios_da_mi_admin_pass_v1';
+      const DEFAULT_PASSWORD = '@4321';
+      const WHATSAPP_NUMBER = '5511968342103';
+      const GOOGLE_MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=Rua+Zeferino+Alves+de+Oliveira+1051+Jardim+Ponte+Alta+Guarulhos+SP';
+
+      const DEFAULT_STATE = {
+        bannerFit: 'contain',
+        images: {
+          banner: 'https://i.postimg.cc/ZYw7Sz4p/905788702-1166737955727084-524449998965015467-n.jpg',
+          logo: 'https://i.postimg.cc/BQthZ7n8/907887408-1452803366962488-9194404289877991233-n.jpg',
+          cardAgendar: 'https://i.ibb.co/p6hZPFNC/IMG-20261114-WA0008.jpg',
+          cardCatalogo: 'https://i.ibb.co/WWCyqmjp/IMG-20261114-WA0011.jpg',
+          cardAcademy: 'https://i.ibb.co/jZL9jcjK/IMG-20261114-WA0010.jpg',
+          cardAvaliacoes: 'https://i.ibb.co/pSrMR8R/IMG-20261114-WA0006.jpg',
+          cardLocalizacao: 'https://i.ibb.co/nMvT9MTw/IMG-20261114-WA0009.jpg',
+          cardStudio: 'https://i.ibb.co/fV3kRnHT/IMG-20261114-WA0005.jpg'
+        },
+        studioPhotos: [
+          'https://i.ibb.co/fV3kRnHT/IMG-20261114-WA0005.jpg',
+          'https://i.ibb.co/p6hZPFNC/IMG-20261114-WA0008.jpg'
+        ],
+        texts: {
+          bioHandle: '@_ciliosdami',
+          bioSubtitle: 'Cílios | Sobrancelhas | Unhas • Seu espaço de beleza preferido',
+          badge1: '✨ +2.000 atendimentos',
+          badge2: '🎓 18 alunas formadas',
+          badgeCardAgendar: 'Atendimento Exclusivo',
+          titleCardAgendar: 'AGENDAR HORÁRIO',
+          sub1CardAgendar: 'Garanta seu horário direto pelo WhatsApp',
+          sub2CardAgendar: 'Cílios, Sobrancelhas e Unhas em Guarulhos',
+          badgeCardCatalogo: 'Tabela de Valores',
+          titleCardCatalogo: 'CATÁLOGO',
+          sub1CardCatalogo: 'Confira os valores de Cílios, Sobrancelhas e Unhas',
+          sub2CardCatalogo: 'Aplicação, manutenção, pacotes e técnicas detalhadas',
+          badgeCardAcademy: 'Formação Profissional',
+          titleCardAcademy: 'ACADEMY',
+          sub1CardAcademy: 'Cursos de Cílios e Sobrancelhas com Milena Silveira',
+          sub2CardAcademy: '+18 alunas formadas • Fale no WhatsApp para próximas turmas',
+          badgeCardAvaliacoes: 'Google ★★★★★',
+          titleCardAvaliacoes: 'AVALIAÇÕES',
+          sub1CardAvaliacoes: 'Descubra o porquê somos referência em Guarulhos',
+          sub2CardAvaliacoes: 'Veja nossos depoimentos reais ou deixe sua avaliação no Google',
+          badgeCardLocalizacao: 'Jardim Ponte Alta • Guarulhos',
+          titleCardLocalizacao: 'COMO CHEGAR',
+          sub1CardLocalizacao: 'Rua Zeferino Alves de Oliveira, 1051',
+          sub2CardLocalizacao: 'Toque para abrir o mapa interativo e horários de atendimento',
+          badgeCardStudio: 'Estrutura & Conforto',
+          titleCardStudio: 'NOSSO STUDIO',
+          sub1CardStudio: 'Conheça nosso espaço e veja fotos do estúdio',
+          footerBrand: 'CÍLIOS DA MI • Studio & Academy',
+          footerSub: '@_ciliosdami • WhatsApp (11) 96834-2103 • Guarulhos - SP',
+          addressFull: 'Rua Zeferino Alves de Oliveira, 1051 — Jardim Ponte Alta, Guarulhos - SP, CEP 07170-260'
+        },
+        catalog: {
+          cilios: [
+            { name: 'Volume Brasileiro (Preto ou Marrom)', appPrice: 'R$ 150,00', maintPrice: 'R$ 100,00', desc: '' },
+            { name: 'Volume Egípcio (Preto ou Marrom)', appPrice: 'R$ 160,00', maintPrice: 'R$ 110,00', desc: '' },
+            { name: 'Volume Fox (Preto ou Marrom)', appPrice: 'R$ 160,00', maintPrice: 'R$ 110,00', desc: '' },
+            { name: 'Volume Angel', appPrice: 'R$ 150,00', maintPrice: 'R$ 100,00', desc: '' },
+            { name: 'Volume 6D', appPrice: 'R$ 170,00', maintPrice: 'R$ 120,00', desc: '' },
+            { name: 'Volume Jade', appPrice: 'R$ 150,00', maintPrice: 'R$ 100,00', desc: '' },
+            { name: 'Volume Sirena', appPrice: 'R$ 140,00', maintPrice: '', desc: 'Não fazemos manutenção pra essa técnica.' },
+            { name: 'Lash Lifting', appPrice: 'R$ 130,00', maintPrice: '', desc: 'Procedimento que curva e colore os cílios naturais. Não há manutenção, dura em média 40 dias.' },
+            { name: 'Remoção', appPrice: 'R$ 30,00', maintPrice: '', desc: '' }
+          ],
+          sobrancelhas: [
+            { name: 'Design', appPrice: 'R$ 30,00', maintPrice: '', desc: '' },
+            { name: 'Design c/ Henna', appPrice: 'R$ 50,00', maintPrice: '', desc: '' },
+            { name: 'Brow Lamination', appPrice: 'R$ 110,00', maintPrice: '', desc: '' },
+            { name: 'Epilação Buço', appPrice: 'R$ 10,00', maintPrice: '', desc: '' }
+          ],
+          unhas: [
+            { name: 'Manicure Trad.', appPrice: 'R$ 35,00', maintPrice: '', desc: '' },
+            { name: 'Pedicure Trad.', appPrice: 'R$ 40,00', maintPrice: '', desc: '' },
+            { name: 'Manicure & Pedicure', appPrice: 'R$ 60,00', maintPrice: '', desc: '' },
+            { name: 'Esmaltação em Gel', appPrice: 'R$ 15,00 adicional', maintPrice: '', desc: '' },
+            { name: 'Pacote Mão e Pé', appPrice: 'R$ 150,00', maintPrice: '', desc: 'Feito pra 4 semanas sequenciais, e deve ser pago integralmente na 1° semana. Incluso 4 manicures e 2 pedicures.' },
+            { name: 'Alongamento Molde F1', appPrice: 'R$ 125,00', maintPrice: 'R$ 95,00', desc: '' },
+            { name: 'Banho de Gel', appPrice: 'R$ 100,00', maintPrice: 'R$ 80,00', desc: '' },
+            { name: 'Remoção', appPrice: 'R$ 35,00', maintPrice: '', desc: '' }
+          ]
+        }
+      };
+
+      function cloneDefaultState() {
+        return JSON.parse(JSON.stringify(DEFAULT_STATE));
+      }
+
+      function loadState() {
+        const base = cloneDefaultState();
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('cilios_da_mi_bio_custom_v1');
+          if (!raw) return base;
+          const saved = JSON.parse(raw);
+          if (saved.bannerFit) base.bannerFit = saved.bannerFit;
+          if (saved.images) Object.assign(base.images, saved.images);
+          if (Array.isArray(saved.studioPhotos) && saved.studioPhotos.length > 0) {
+            base.studioPhotos = saved.studioPhotos;
+          } else if (saved.images && (saved.images.studioGallery1 || saved.images.studioGallery2)) {
+            base.studioPhotos = [
+              saved.images.studioGallery1 || base.studioPhotos[0],
+              saved.images.studioGallery2 || base.studioPhotos[1]
+            ];
+          }
+          if (saved.texts) Object.assign(base.texts, saved.texts);
+          if (saved.catalog) {
+            if (Array.isArray(saved.catalog.cilios)) base.catalog.cilios = saved.catalog.cilios;
+            if (Array.isArray(saved.catalog.sobrancelhas)) base.catalog.sobrancelhas = saved.catalog.sobrancelhas;
+            if (Array.isArray(saved.catalog.unhas)) base.catalog.unhas = saved.catalog.unhas;
+          }
+        } catch (err) {
+          console.warn('Falha ao ler dados salvos:', err);
+        }
+        return base;
+      }
+
+      function persistState() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(siteState));
+          return true;
+        } catch (err) {
+          showToast('Armazenamento cheio. Remova alguma foto antiga.');
+          return false;
+        }
+      }
+
+      let siteState = loadState();
+      let isEditMode = false;
+      let activeCatalogCategory = 'cilios';
+      let currentOpenSection = null;
+      let pendingPhotoTarget = null;
+      let pendingTextContext = null;
+      let secretModalPurpose = 'login';
+      let secretTapCount = 0;
+      let secretTapTimer = null;
+      let resetConfirmStep = false;
+
+      function showToast(msg) {
+        const toast = document.getElementById('toastNotification');
+        const label = document.getElementById('toastMessage');
+        if (!toast || !label) return;
+        label.textContent = msg;
+        toast.classList.remove('hidden');
+        toast.classList.add('flex');
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => {
+          toast.classList.add('hidden');
+          toast.classList.remove('flex');
+        }, 2800);
+      }
+
+      function escapeHtml(str) {
+        return String(str || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function buildWhatsAppLink(message) {
+        return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+      }
+
+      /* Aplica todas as fotos e textos na página */
+      function applyStateToDOM() {
+        const { images, texts } = siteState;
+        const bannerWrapper = document.getElementById('siteBannerWrapper');
+        const bannerImg = document.getElementById('siteBannerImg');
+        const bannerBackdrop = document.getElementById('siteBannerBackdrop');
+
+        if (bannerBackdrop && images.banner) bannerBackdrop.src = images.banner;
+
+        if (bannerWrapper && bannerImg) {
+          if (siteState.bannerFit === 'cover') {
+            bannerWrapper.className = 'relative w-full h-56 sm:h-64 bg-[#141414] overflow-hidden';
+            bannerImg.className = 'relative z-10 w-full h-full object-cover object-center select-none';
+            if (bannerBackdrop) bannerBackdrop.classList.add('hidden');
+          } else {
+            bannerWrapper.className = 'relative w-full h-60 sm:h-72 bg-[#141414] overflow-hidden flex items-center justify-center pt-4 pb-16 sm:pb-20 px-4';
+            bannerImg.className = 'relative z-10 max-h-[155px] sm:max-h-[190px] max-w-[85%] w-auto h-auto object-contain object-center banner-vignette select-none';
+            if (bannerBackdrop) bannerBackdrop.classList.remove('hidden');
+          }
+        }
+
+        const setImg = (id, url) => {
+          const el = document.getElementById(id);
+          if (el && url) el.src = url;
+        };
+        const setTxt = (id, val) => {
+          const el = document.getElementById(id);
+          if (el && typeof val === 'string') el.textContent = val;
+        };
+
+        setImg('siteBannerImg', images.banner);
+        setImg('siteLogoImg', images.logo);
+        setImg('imgCardAgendar', images.cardAgendar);
+        setImg('imgCardCatalogo', images.cardCatalogo);
+        setImg('imgCardAcademy', images.cardAcademy);
+        setImg('imgCardAvaliacoes', images.cardAvaliacoes);
+        setImg('imgCardLocalizacao', images.cardLocalizacao);
+        setImg('imgCardStudio', images.cardStudio);
+
+        setTxt('txtBioHandle', texts.bioHandle);
+        setTxt('txtBioSubtitle', texts.bioSubtitle);
+        setTxt('txtBadge1', texts.badge1);
+        setTxt('txtBadge2', texts.badge2);
+
+        setTxt('badgeCardAgendar', texts.badgeCardAgendar);
+        setTxt('titleCardAgendar', texts.titleCardAgendar);
+        setTxt('sub1CardAgendar', texts.sub1CardAgendar);
+        setTxt('sub2CardAgendar', texts.sub2CardAgendar);
+
+        setTxt('badgeCardCatalogo', texts.badgeCardCatalogo);
+        setTxt('titleCardCatalogo', texts.titleCardCatalogo);
+        setTxt('sub1CardCatalogo', texts.sub1CardCatalogo);
+        setTxt('sub2CardCatalogo', texts.sub2CardCatalogo);
+
+        setTxt('badgeCardAcademy', texts.badgeCardAcademy);
+        setTxt('titleCardAcademy', texts.titleCardAcademy);
+        setTxt('sub1CardAcademy', texts.sub1CardAcademy);
+        setTxt('sub2CardAcademy', texts.sub2CardAcademy);
+
+        setTxt('badgeCardAvaliacoes', texts.badgeCardAvaliacoes);
+        setTxt('titleCardAvaliacoes', texts.titleCardAvaliacoes);
+        setTxt('sub1CardAvaliacoes', texts.sub1CardAvaliacoes);
+        setTxt('sub2CardAvaliacoes', texts.sub2CardAvaliacoes);
+
+        setTxt('badgeCardLocalizacao', texts.badgeCardLocalizacao);
+        setTxt('titleCardLocalizacao', texts.titleCardLocalizacao);
+        setTxt('sub1CardLocalizacao', texts.sub1CardLocalizacao);
+        setTxt('sub2CardLocalizacao', texts.sub2CardLocalizacao);
+
+        setTxt('badgeCardStudio', texts.badgeCardStudio);
+        setTxt('titleCardStudio', texts.titleCardStudio);
+        setTxt('sub1CardStudio', texts.sub1CardStudio);
+
+        setTxt('txtFooterBrand', texts.footerBrand);
+        setTxt('txtFooterSub', texts.footerSub);
+      }
+
+      /* ==================== MODAIS PRINCIPAIS ==================== */
+      window.openBioSection = function (section) {
+        currentOpenSection = section;
+        const modal = document.getElementById('bioModal');
+        const badge = document.getElementById('modalBadge');
+        const title = document.getElementById('modalTitle');
+        const body = document.getElementById('modalBody');
+        if (!modal || !badge || !title || !body) return;
+
+        if (section === 'catalogo') {
+          badge.textContent = 'TABELA OFICIAL';
+          title.textContent = 'CATÁLOGO & VALORES';
+          renderCatalogModalContent(body);
+        } else if (section === 'localizacao') {
+          badge.textContent = 'GUARULHOS • SP';
+          title.textContent = 'COMO CHEGAR';
+          renderLocationModalContent(body);
+        } else if (section === 'studio') {
+          badge.textContent = 'ESTRUTURA & AMBIENTE';
+          title.textContent = 'NOSSO STUDIO';
+          renderStudioModalContent(body);
+        }
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+      };
+
+      window.closeBioModal = function () {
+        currentOpenSection = null;
+        const modal = document.getElementById('bioModal');
+        if (!modal) return;
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+      };
+
+      /* Renderiza o Catálogo (com botões de edição direta se isEditMode = true) */
+      function renderCatalogModalContent(container) {
+        const categories = [
+          { key: 'cilios', label: 'Cílios' },
+          { key: 'sobrancelhas', label: 'Sobrancelhas' },
+          { key: 'unhas', label: 'Unhas' }
+        ];
+        const items = siteState.catalog[activeCatalogCategory] || [];
+
+        const tabsHtml = categories.map(cat => {
+          const isActive = cat.key === activeCatalogCategory;
+          return `
+            <button type="button" onclick="switchCatalogCategory('${cat.key}')"
+              class="flex-1 py-3 px-2 rounded-2xl text-xs sm:text-sm font-semibold transition cursor-pointer ${
+                isActive
+                  ? 'bg-[#141414] text-[#D8BE86] shadow-md'
+                  : 'bg-white text-[#141414] border border-[#E4DFD5] hover:border-[#B89552]'
+              }">
+              ${escapeHtml(cat.label)}
+            </button>
+          `;
+        }).join('');
+
+        const importantBannerHtml = activeCatalogCategory === 'cilios'
+          ? `
+            <div class="p-4 rounded-2xl bg-[#141414] text-white border border-[#B89552]/40">
+              <p class="text-[11px] font-bold uppercase tracking-[0.18em] text-[#D8BE86]">IMPORTANTE:</p>
+              <p class="text-xs text-neutral-200 mt-1 leading-relaxed">
+                Todas as manutenções são feitas até <strong class="text-white">21 dias</strong>, para garantir a saúde e durabilidade ideal dos seus cílios.
+              </p>
+            </div>
+          `
+          : '';
+
+        const cardsHtml = items.map((item, idx) => {
+          const waText = `Olá Mi! ✨ Vim pelo link da bio (@_ciliosdami) e gostaria de agendar: *${item.name}*`;
+          const waHref = buildWhatsAppLink(waText);
+          const hasMaint = Boolean(item.maintPrice && item.maintPrice.trim());
+          const hasDesc = Boolean(item.desc && item.desc.trim());
+
+          const actionBtn = isEditMode
+            ? `
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button type="button" onclick="openCatalogItemEditor('${activeCatalogCategory}', ${idx})"
+                  class="px-3 py-1.5 rounded-xl bg-[#B89552] text-[#141414] text-[11px] font-bold cursor-pointer">
+                  Editar
+                </button>
+                <button type="button" onclick="deleteCatalogItem('${activeCatalogCategory}', ${idx})"
+                  class="px-2.5 py-1.5 rounded-xl bg-red-100 text-red-700 text-[11px] font-bold cursor-pointer">
+                  ✕
+                </button>
+              </div>
+            `
+            : `
+              <a href="${waHref}" target="_blank" rel="noopener noreferrer"
+                class="shrink-0 px-3.5 py-2 rounded-xl bg-[#141414] hover:bg-[#B89552] text-[#D8BE86] hover:text-[#141414] text-[11px] font-semibold tracking-wide transition">
+                Agendar →
+              </a>
+            `;
+
+          return `
+            <div class="p-4 sm:p-5 rounded-2xl bg-white border ${isEditMode ? 'border-[#B89552]' : 'border-[#E4DFD5]'} hover:border-[#B89552] transition shadow-sm space-y-3">
+              <div class="flex items-start justify-between gap-3">
+                <h4 class="text-sm sm:text-base font-bold text-[#141414] leading-snug">
+                  ${escapeHtml(item.name)}
+                </h4>
+                ${actionBtn}
+              </div>
+              ${hasDesc ? `<p class="text-xs text-neutral-600 leading-relaxed">${escapeHtml(item.desc)}</p>` : ''}
+              <div class="flex flex-wrap items-center gap-2 pt-0.5">
+                <span class="px-3 py-1.5 rounded-xl bg-[#EFECE6] text-xs font-semibold text-[#141414]">
+                  ${hasMaint ? 'Aplicação: ' : 'Valor: '}<strong class="text-[#141414]">${escapeHtml(item.appPrice)}</strong>
+                </span>
+                ${hasMaint ? `
+                  <span class="px-3 py-1.5 rounded-xl bg-[#F6F5F2] border border-[#E4DFD5] text-xs font-semibold text-neutral-700">
+                    Manutenção: <strong class="text-[#141414]">${escapeHtml(item.maintPrice)}</strong>
+                  </span>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        const addServiceBtnHtml = isEditMode
+          ? `
+            <button type="button" onclick="openCatalogItemEditor('${activeCatalogCategory}', -1)"
+              class="w-full py-3.5 rounded-2xl bg-[#141414] hover:bg-[#B89552] text-[#D8BE86] hover:text-[#141414] text-xs font-bold uppercase tracking-[0.18em] transition cursor-pointer shadow-md">
+              + Adicionar Serviço nesta Categoria
+            </button>
+          `
+          : '';
+
+        container.innerHTML = `
+          <div class="flex items-center gap-2">${tabsHtml}</div>
+          ${importantBannerHtml}
+          ${addServiceBtnHtml}
+          <div class="space-y-3">${cardsHtml}</div>
+        `;
+      }
+
+      window.switchCatalogCategory = function (catKey) {
+        activeCatalogCategory = catKey;
+        const body = document.getElementById('modalBody');
+        if (body) renderCatalogModalContent(body);
+      };
+
+      /* Renderiza o Modal Como Chegar */
+      function renderLocationModalContent(container) {
+        const addr = siteState.texts.addressFull;
+        const mapEmbedUrl = 'https://maps.google.com/maps?q=Rua%20Zeferino%20Alves%20de%20Oliveira%2C%201051%20-%20Jardim%20Ponte%20Alta%2C%20Guarulhos%20-%20SP&t=&z=16&ie=UTF8&iwloc=&output=embed';
+        const editAddressBtn = isEditMode
+          ? `<button type="button" onclick="openTextEditor('address')" class="mt-2 px-3 py-1 rounded-lg bg-[#B89552] text-[#141414] text-[11px] font-bold cursor-pointer">Editar Endereço</button>`
+          : '';
+
+        container.innerHTML = `
+          <div class="p-4 sm:p-5 rounded-2xl bg-white border border-[#E4DFD5] space-y-3">
+            <div class="flex items-start gap-3">
+              <span class="w-10 h-10 rounded-xl bg-[#141414] text-[#D8BE86] flex items-center justify-center shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </span>
+              <div>
+                <span class="text-[10px] uppercase tracking-[0.2em] text-[#B89552] font-bold">Endereço Oficial</span>
+                <p class="text-xs sm:text-sm font-semibold text-[#141414] mt-0.5 leading-relaxed">${escapeHtml(addr)}</p>
+                ${editAddressBtn}
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+              <a href="${GOOGLE_MAPS_URL}" target="_blank" rel="noopener noreferrer"
+                class="py-3 px-4 rounded-xl bg-[#141414] hover:bg-[#B89552] text-[#D8BE86] hover:text-[#141414] text-xs font-bold uppercase tracking-wider text-center transition">
+                Abrir no Google Maps
+              </a>
+              <button type="button" onclick="copyStudioAddress()"
+                class="py-3 px-4 rounded-xl bg-[#EFECE6] hover:bg-[#E4DFD5] text-[#141414] text-xs font-bold uppercase tracking-wider text-center transition cursor-pointer">
+                Copiar Endereço
+              </button>
+            </div>
+          </div>
+
+          <div class="rounded-2xl overflow-hidden border border-[#E4DFD5] bg-white shadow-sm">
+            <iframe title="Mapa Cílios da Mi Guarulhos" src="${mapEmbedUrl}" class="w-full h-56 sm:h-64 border-0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+
+          <div class="p-4 sm:p-5 rounded-2xl bg-[#141414] text-white space-y-2.5">
+            <p class="text-[10px] uppercase tracking-[0.24em] text-[#D8BE86] font-bold">Horário de Funcionamento</p>
+            <div class="space-y-1.5 text-xs">
+              <div class="flex justify-between py-1 border-b border-white/10">
+                <span class="text-neutral-300">Segunda a Sexta-feira</span>
+                <span class="font-semibold text-white">08:00 – 19:00</span>
+              </div>
+              <div class="flex justify-between py-1 border-b border-white/10">
+                <span class="text-neutral-300">Sábado</span>
+                <span class="font-semibold text-white">08:00 – 17:00</span>
+              </div>
+              <div class="flex justify-between py-1">
+                <span class="text-neutral-300">Domingo</span>
+                <span class="font-semibold text-[#D8BE86]">Fechado</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      window.copyStudioAddress = function () {
+        const helper = document.createElement('textarea');
+        helper.value = siteState.texts.addressFull;
+        helper.style.position = 'fixed';
+        helper.style.opacity = '0';
+        document.body.appendChild(helper);
+        helper.select();
+        try {
+          document.execCommand('copy');
+          showToast('Endereço copiado!');
+        } catch (err) {
+          showToast('Não foi possível copiar.');
+        }
+        document.body.removeChild(helper);
+      };
+
+      /* Renderiza o Modal Nosso Studio (sem descrições; com opção de adicionar/trocar/remover fotos no Modo Edição) */
+      function renderStudioModalContent(container) {
+        const photos = siteState.studioPhotos || [];
+
+        const addPhotoHeader = isEditMode
+          ? `
+            <button type="button" onclick="triggerAddStudioPhoto()"
+              class="w-full py-3.5 rounded-2xl bg-[#141414] hover:bg-[#B89552] text-[#D8BE86] hover:text-[#141414] text-xs font-bold uppercase tracking-[0.18em] transition cursor-pointer shadow-md">
+              + Adicionar Mais Foto ao Nosso Studio
+            </button>
+          `
+          : '';
+
+        const photosHtml = photos.map((src, idx) => {
+          const editControls = isEditMode
+            ? `
+              <div class="absolute top-3 right-3 z-20 flex items-center gap-1.5">
+                <button type="button" onclick="triggerReplaceStudioPhoto(${idx})"
+                  class="px-3 py-1.5 rounded-full bg-[#B89552] text-[#141414] text-[11px] font-bold shadow-lg cursor-pointer">
+                  Trocar Foto
+                </button>
+                ${photos.length > 1 ? `
+                  <button type="button" onclick="removeStudioPhoto(${idx})"
+                    class="px-2.5 py-1.5 rounded-full bg-red-600 text-white text-[11px] font-bold shadow-lg cursor-pointer">
+                    Remover
+                  </button>
+                ` : ''}
+              </div>
+            `
+            : '';
+
+          return `
+            <div class="relative rounded-2xl overflow-hidden border border-[#E4DFD5] bg-white shadow-sm">
+              ${editControls}
+              <img src="${escapeHtml(src)}" alt="Foto ${idx + 1} do Studio" class="w-full h-auto object-cover" />
+            </div>
+          `;
+        }).join('');
+
+        container.innerHTML = `
+          ${addPhotoHeader}
+          <div class="space-y-4">
+            ${photosHtml}
+          </div>
+        `;
+      }
+
+      /* ==================== MODO DE EDIÇÃO VISUAL DIRETO NA PÁGINA ==================== */
+      window.registerSecretTap = function () {
+        if (isEditMode) return;
+        secretTapCount += 1;
+        clearTimeout(secretTapTimer);
+        if (secretTapCount >= 5) {
+          secretTapCount = 0;
+          openSecretModal('login');
+          return;
+        }
+        secretTapTimer = setTimeout(() => { secretTapCount = 0; }, 1800);
+      };
+
+      function getAdminPassword() {
+        try {
+          return localStorage.getItem(ADMIN_PASS_KEY) || DEFAULT_PASSWORD;
+        } catch (e) {
+          return DEFAULT_PASSWORD;
+        }
+      }
+
+      function openSecretModal(purpose) {
+        secretModalPurpose = purpose;
+        const modal = document.getElementById('secretLoginModal');
+        const heading = document.getElementById('secretModalHeading');
+        const label = document.getElementById('secretModalLabel');
+        const btn = document.getElementById('secretModalSubmitBtn');
+        const input = document.getElementById('secretPasswordInput');
+        const err = document.getElementById('secretLoginError');
+        if (!modal || !input) return;
+
+        input.value = '';
+        if (err) err.classList.add('hidden');
+
+        if (purpose === 'change_password') {
+          heading.textContent = 'Alterar Senha';
+          label.textContent = 'Digite a nova senha (mínimo 4 caracteres)';
+          btn.textContent = 'Salvar Nova Senha';
+        } else {
+          heading.textContent = 'Modo Edição Mi';
+          label.textContent = 'Digite sua senha de acesso';
+          btn.textContent = 'Ativar Edição na Tela';
+        }
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        setTimeout(() => input.focus(), 100);
+      }
+
+      window.openPasswordModal = function () {
+        openSecretModal('change_password');
+      };
+
+      window.closeSecretLogin = function () {
+        const modal = document.getElementById('secretLoginModal');
+        if (!modal) return;
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      };
+
+      window.submitSecretPassword = function (event) {
+        event.preventDefault();
+        const input = document.getElementById('secretPasswordInput');
+        const err = document.getElementById('secretLoginError');
+        if (!input) return;
+        const val = input.value.trim();
+
+        if (secretModalPurpose === 'change_password') {
+          if (val.length < 4) {
+            if (err) {
+              err.textContent = 'A senha precisa ter pelo menos 4 caracteres.';
+              err.classList.remove('hidden');
+            }
+            return;
+          }
+          try { localStorage.setItem(ADMIN_PASS_KEY, val); } catch (e) {}
+          window.closeSecretLogin();
+          showToast('Nova senha salva!');
+          return;
+        }
+
+        if (val === getAdminPassword()) {
+          window.closeSecretLogin();
+          enterEditMode();
+        } else if (err) {
+          err.textContent = 'Senha incorreta. Tente novamente.';
+          err.classList.remove('hidden');
+        }
+      };
+
+      function enterEditMode() {
+        isEditMode = true;
+        document.body.classList.add('edit-mode');
+        const bar = document.getElementById('editModeBar');
+        if (bar) bar.classList.remove('hidden');
+        showToast('Toque nos botões dourados para editar fotos ou textos!');
+      }
+
+      window.saveAndExitEditMode = function () {
+        persistState();
+        isEditMode = false;
+        resetConfirmStep = false;
+        document.body.classList.remove('edit-mode');
+        const bar = document.getElementById('editModeBar');
+        const resetBtn = document.getElementById('btnResetTop');
+        if (bar) bar.classList.add('hidden');
+        if (resetBtn) resetBtn.textContent = 'Resetar';
+        if (currentOpenSection) window.openBioSection(currentOpenSection);
+        showToast('Alterações salvas!');
+      };
+
+      window.handleTopResetClick = function () {
+        const btn = document.getElementById('btnResetTop');
+        if (!resetConfirmStep) {
+          resetConfirmStep = true;
+          if (btn) btn.textContent = 'Confirmar?';
+          setTimeout(() => {
+            resetConfirmStep = false;
+            if (btn) btn.textContent = 'Resetar';
+          }, 3500);
+          return;
+        }
+        resetConfirmStep = false;
+        if (btn) btn.textContent = 'Resetar';
+        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+        siteState = cloneDefaultState();
+        applyStateToDOM();
+        if (currentOpenSection) window.openBioSection(currentOpenSection);
+        showToast('Site restaurado ao padrão!');
+      };
+
+      window.toggleBannerFit = function () {
+        siteState.bannerFit = siteState.bannerFit === 'cover' ? 'contain' : 'cover';
+        applyStateToDOM();
+        persistState();
+        showToast(siteState.bannerFit === 'cover' ? 'Banner: Preencher Largura' : 'Banner: Proporção Original');
+      };
+
+      /* Compressão de foto da galeria do celular */
+      function compressImageFile(file, maxDim = 960, quality = 0.80) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+              let { width, height } = img;
+              if (width > maxDim || height > maxDim) {
+                if (width > height) {
+                  height = Math.round((height * maxDim) / width);
+                  width = maxDim;
+                } else {
+                  width = Math.round((width * maxDim) / height);
+                  height = maxDim;
+                }
+              }
+              const canvas = document.createElement('canvas');
+              canvas.width = width;
+              canvas.height = height;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, width, height);
+              resolve(canvas.toDataURL('image/jpeg', quality));
+            };
+            img.onerror = reject;
+            img.src = e.target.result;
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+
+      window.triggerImageChange = function (imageKey) {
+        pendingPhotoTarget = { type: 'image', key: imageKey };
+        const picker = document.getElementById('globalPhotoPicker');
+        if (picker) {
+          picker.value = '';
+          picker.click();
+        }
+      };
+
+      window.triggerAddStudioPhoto = function () {
+        pendingPhotoTarget = { type: 'studio_add' };
+        const picker = document.getElementById('globalPhotoPicker');
+        if (picker) {
+          picker.value = '';
+          picker.click();
+        }
+      };
+
+      window.triggerReplaceStudioPhoto = function (index) {
+        pendingPhotoTarget = { type: 'studio_replace', index };
+        const picker = document.getElementById('globalPhotoPicker');
+        if (picker) {
+          picker.value = '';
+          picker.click();
+        }
+      };
+
+      window.removeStudioPhoto = function (index) {
+        if (!Array.isArray(siteState.studioPhotos) || siteState.studioPhotos.length <= 1) return;
+        siteState.studioPhotos.splice(index, 1);
+        persistState();
+        const body = document.getElementById('modalBody');
+        if (body) renderStudioModalContent(body);
+        showToast('Foto removida!');
+      };
+
+      window.onGlobalPhotoPicked = async function (inputEl) {
+        const file = inputEl.files && inputEl.files[0];
+        if (!file || !pendingPhotoTarget) return;
+        try {
+          const dataUrl = await compressImageFile(file);
+          if (pendingPhotoTarget.type === 'image') {
+            siteState.images[pendingPhotoTarget.key] = dataUrl;
+            applyStateToDOM();
+          } else if (pendingPhotoTarget.type === 'studio_add') {
+            siteState.studioPhotos.push(dataUrl);
+            const body = document.getElementById('modalBody');
+            if (body) renderStudioModalContent(body);
+          } else if (pendingPhotoTarget.type === 'studio_replace') {
+            siteState.studioPhotos[pendingPhotoTarget.index] = dataUrl;
+            const body = document.getElementById('modalBody');
+            if (body) renderStudioModalContent(body);
+          }
+          persistState();
+          showToast('Foto atualizada!');
+        } catch (err) {
+          showToast('Erro ao carregar foto.');
+        }
+        pendingPhotoTarget = null;
+      };
+
+      /* Edição Direta de Textos e Serviços no Próprio Local */
+      window.openTextEditor = function (target) {
+        pendingTextContext = { type: 'texts', target };
+        const modal = document.getElementById('inlineEditModal');
+        const title = document.getElementById('inlineEditTitle');
+        const fields = document.getElementById('inlineEditFields');
+        if (!modal || !title || !fields) return;
+
+        let fieldConfigs = [];
+        if (target === 'bio') {
+          title.textContent = 'Editar Perfil & Bio';
+          fieldConfigs = [
+            { key: 'bioHandle', label: 'Arroba (@)' },
+            { key: 'bioSubtitle', label: 'Frase da Bio' },
+            { key: 'badge1', label: 'Selo 1' },
+            { key: 'badge2', label: 'Selo 2' }
+          ];
+        } else if (target === 'address') {
+          title.textContent = 'Editar Endereço';
+          fieldConfigs = [
+            { key: 'addressFull', label: 'Endereço Completo' }
+          ];
+        } else {
+          const cap = target.charAt(0).toUpperCase() + target.slice(1);
+          title.textContent = 'Editar Textos do Card';
+          fieldConfigs = [
+            { key: `badge${cap}`, label: 'Etiqueta Superior' },
+            { key: `title${cap}`, label: 'Título Grande' },
+            { key: `sub1${cap}`, label: 'Texto Principal' }
+          ];
+          if (target !== 'cardStudio') {
+            fieldConfigs.push({ key: `sub2${cap}`, label: 'Texto Secundário' });
+          }
+        }
+
+        fields.innerHTML = fieldConfigs.map(f => `
+          <div>
+            <label class="block text-xs font-semibold text-[#141414] mb-1">${escapeHtml(f.label)}</label>
+            <input type="text" data-edit-key="${f.key}" value="${escapeHtml(siteState.texts[f.key] || '')}"
+              class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#E4DFD5] focus:border-[#B89552] focus:outline-none text-sm text-[#141414]" />
+          </div>
+        `).join('');
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      };
+
+      window.openCatalogItemEditor = function (category, index) {
+        pendingTextContext = { type: 'catalog', category, index };
+        const modal = document.getElementById('inlineEditModal');
+        const title = document.getElementById('inlineEditTitle');
+        const fields = document.getElementById('inlineEditFields');
+        if (!modal || !title || !fields) return;
+
+        const isNew = index === -1;
+        const item = isNew
+          ? { name: '', appPrice: '', maintPrice: '', desc: '' }
+          : siteState.catalog[category][index];
+
+        title.textContent = isNew ? 'Novo Serviço' : 'Editar Serviço';
+        fields.innerHTML = `
+          <div>
+            <label class="block text-xs font-semibold text-[#141414] mb-1">Nome do Serviço</label>
+            <input type="text" id="catEditName" value="${escapeHtml(item.name)}" placeholder="Ex: Volume Brasileiro"
+              class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#E4DFD5] focus:border-[#B89552] focus:outline-none text-sm text-[#141414]" />
+          </div>
+          <div class="grid grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-xs font-semibold text-[#141414] mb-1">Valor / Aplicação</label>
+              <input type="text" id="catEditApp" value="${escapeHtml(item.appPrice)}" placeholder="R$ 150,00"
+                class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#E4DFD5] focus:border-[#B89552] focus:outline-none text-sm text-[#141414]" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-[#141414] mb-1">Manutenção (opcional)</label>
+              <input type="text" id="catEditMaint" value="${escapeHtml(item.maintPrice || '')}" placeholder="R$ 100,00"
+                class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#E4DFD5] focus:border-[#B89552] focus:outline-none text-sm text-[#141414]" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-[#141414] mb-1">Observação (opcional)</label>
+            <input type="text" id="catEditDesc" value="${escapeHtml(item.desc || '')}" placeholder="Deixe vazio se não precisar"
+              class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-[#E4DFD5] focus:border-[#B89552] focus:outline-none text-sm text-[#141414]" />
+          </div>
+        `;
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      };
+
+      window.deleteCatalogItem = function (category, index) {
+        if (!siteState.catalog[category]) return;
+        siteState.catalog[category].splice(index, 1);
+        persistState();
+        const body = document.getElementById('modalBody');
+        if (body) renderCatalogModalContent(body);
+        showToast('Serviço removido!');
+      };
+
+      window.closeInlineEditModal = function () {
+        const modal = document.getElementById('inlineEditModal');
+        if (!modal) return;
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        pendingTextContext = null;
+      };
+
+      window.saveInlineEditForm = function (event) {
+        event.preventDefault();
+        if (!pendingTextContext) return;
+
+        if (pendingTextContext.type === 'texts') {
+          const inputs = document.querySelectorAll('#inlineEditFields input[data-edit-key]');
+          inputs.forEach(inp => {
+            const key = inp.getAttribute('data-edit-key');
+            if (key) siteState.texts[key] = inp.value;
+          });
+          applyStateToDOM();
+          if (currentOpenSection === 'localizacao') {
+            renderLocationModalContent(document.getElementById('modalBody'));
+          }
+        } else if (pendingTextContext.type === 'catalog') {
+          const name = (document.getElementById('catEditName')?.value || '').trim();
+          const appPrice = (document.getElementById('catEditApp')?.value || '').trim();
+          const maintPrice = (document.getElementById('catEditMaint')?.value || '').trim();
+          const desc = (document.getElementById('catEditDesc')?.value || '').trim();
+          if (!name || !appPrice) {
+            showToast('Preencha o nome e o valor.');
+            return;
+          }
+          const payload = { name, appPrice, maintPrice, desc };
+          if (pendingTextContext.index === -1) {
+            siteState.catalog[pendingTextContext.category].push(payload);
+          } else {
+            siteState.catalog[pendingTextContext.category][pendingTextContext.index] = payload;
+          }
+          const body = document.getElementById('modalBody');
+          if (body) renderCatalogModalContent(body);
+        }
+
+        persistState();
+        window.closeInlineEditModal();
+        showToast('Atualizado!');
+      };
+
+      applyStateToDOM();
+    })();
+  </script>
+</body>
+</html>
